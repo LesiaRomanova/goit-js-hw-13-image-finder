@@ -14,6 +14,11 @@ function searchInputHandler(event) {
   const input = form.elements.query;
 
   clearList();
+
+  if (input.value === '') {
+    return;
+  }
+
   service.resetPage();
   service.searchQuery = input.value;
   service.fetchGallery().then(hits => {
@@ -26,10 +31,14 @@ function searchInputHandler(event) {
 function loadMoreBtnHandler() {
   service.fetchGallery().then(hits => {
     const markup = buildListTemplate(hits);
+    const lastPic = refs.gallery.lastElementChild;
     insertList(markup);
 
     if (refs.gallery.children.length > 0) {
-      window.scrollBy(0, -window.innerHeight);
+      lastPic.nextElementSibling.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     }
   });
 }
